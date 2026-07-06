@@ -100,19 +100,6 @@ export default function Hero() {
     var el = containerRef.current;
     if (!el) return;
 
-    var onWheel = function(e) {
-      if (Math.abs(e.deltaX) < 2 && Math.abs(e.deltaY) < 2) return;
-      dragOffsetRef.current -= (e.deltaX || e.deltaY) * 1.2;
-    };
-
-    el.addEventListener("wheel", onWheel, { passive: true });
-    return function() { el.removeEventListener("wheel", onWheel); };
-  }, []);
-
-  useEffect(function() {
-    var el = containerRef.current;
-    if (!el) return;
-
     var onDown = function(e) {
       phaseRef.current = 1;
       dragStartX.current = e.clientX;

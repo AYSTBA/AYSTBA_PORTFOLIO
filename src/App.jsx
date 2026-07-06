@@ -1,4 +1,4 @@
-import Navbar from './components/Navbar';
+import NavWrapper from './components/NavWrapper';
 import Hero from './components/Hero';
 import About from './components/About';
 import Projects from './components/Projects';
@@ -8,7 +8,7 @@ import Contact from './components/Contact';
 export default function App() {
   return (
     <>
-      <Navbar />
+      <NavWrapper />
       <main>
         <Hero />
         <About />

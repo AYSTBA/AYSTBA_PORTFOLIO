@@ -1,39 +1,36 @@
-import { Award, FolderGit2, Code, Users, Mail, ExternalLink } from 'lucide-react';
+import { Award, FolderGit2, Code, Users, Mail } from 'lucide-react';
+import { useLang } from '../context/LanguageContext';
 
 export default function About() {
+  const { t } = useLang();
   const stats = [
-    { num: '13+', label: 'Competition Awards' },
-    { num: '4+', label: 'Years Building' },
-    { num: '20+', label: 'Projects Shipped' },
-    { num: '5+', label: 'Team Members' },
+    { num: '8+', label: t('about.stats.projects') },
+    { num: '3', label: t('about.stats.stars') },
+    { num: '4+', label: t('about.stats.languages') },
+    { num: '2026', label: t('about.stats.started') },
   ];
-  const contacts = [
-    { label: 'Bilibili', href: 'https://space.bilibili.com/3546948852255258', icon: <ExternalLink size={13} /> },
-    { label: 'GitHub', href: 'https://github.com/AYSTBA', icon: <ExternalLink size={13} /> },
-    { label: 'Outlook', href: 'mailto:AYSTBA_aystba@outlook.com', icon: <Mail size={13} /> },
-    { label: 'QQ: 298638937', href: '#', icon: <ExternalLink size={13} /> },
-  ];
+  const skills = ['Vue', 'React', 'TypeScript', 'Python', 'Rust', 'Tauri', 'Express', 'Tailwind', 'Git', 'Figma'];
 
   return (
     <section id="about" className="section about">
       <div className="container">
-        <p className="section-label">About Me</p>
-        <h2 className="section-title">Designer. Developer.<br />Studio Founder.</h2>
-        <p className="section-desc">A three-time national champion who blends visual design with AI to build compelling digital experiences.</p>
+        <p className="section-label">{t('about.label')}</p>
+        <h2 className="section-title">Building Digital<br />Experiences</h2>
+        <p className="section-desc">{t('about.desc')}</p>
         <div className="about-inner">
           <div>
             <div className="about-avatar-wrap">
               <div className="about-avatar-ring" />
-              <div className="about-avatar-placeholder">A</div>
+              <img src="https://avatars.githubusercontent.com/u/194509089?v=4" alt="AYSTBA" className="about-avatar" />
             </div>
           </div>
           <div className="about-text">
             <h3>AYSTBA</h3>
-            <p className="about-role">Visual Designer / AI Designer / Brand Designer — Shenzhen, China</p>
+            <p className="about-role">{t('about.role')}</p>
             <p className="about-bio">
-              Founder of UPCHIS Studio. A creator passionate about building from zero to one. With a background spanning visual design, AI engineering, and brand strategy, I help projects find their visual voice. My work has been recognized across national-level competitions including the World Robot Contest and China Automation & AI Education Conference.
-              <br /><br />
-              Currently exploring: Distributed Computing, AI Agents, and DJI-RoboMaster. ENFP-T personality — I thrive on creative collaboration and open-source.
+              {t('about.bio').split('\n').map((para, i, arr) => (
+                <span key={i}>{para}{i < arr.length - 1 && <><br /><br /></>}</span>
+              ))}
             </p>
             <div className="about-stats">
               {stats.map((s, i) => (
@@ -44,10 +41,8 @@ export default function About() {
               ))}
             </div>
             <div className="about-contact">
-              {contacts.map((c, i) => (
-                <a key={i} href={c.href} target="_blank" rel="noopener noreferrer" className="about-contact-item">
-                  {c.icon} {c.label}
-                </a>
+              {skills.map((skill, i) => (
+                <span key={i} className="about-contact-item">{skill}</span>
               ))}
             </div>
           </div>
