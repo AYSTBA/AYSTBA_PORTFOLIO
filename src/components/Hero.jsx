@@ -1,4 +1,5 @@
 import { useEffect, useRef, useMemo } from "react";
+import DotField from "./DotField";
 
 var carouselItems = [
   { color: "#2a3a2a", label: "Photography" },
@@ -24,7 +25,7 @@ export default function Hero() {
   var autoOffsetRef = useRef(0);
   var dragOffsetRef = useRef(0);
   var momentumVel = useRef(0);
-  var phaseRef = useRef(0); // 0=auto, 1=drag, 2=coast
+  var phaseRef = useRef(0);
 
   var dragStartX = useRef(0);
   var dragStartOffset = useRef(0);
@@ -54,10 +55,8 @@ export default function Hero() {
       } else if (phase === 0) {
         autoOffsetRef.current += speed * dt;
         if (autoOffsetRef.current >= TOTAL_W) autoOffsetRef.current -= TOTAL_W;
-        // dragOffset stays ? no bounce back
       }
 
-      // infinite scroll: wrap combined offset
       var raw = autoOffsetRef.current + dragOffsetRef.current;
       var offset = ((raw % TOTAL_W) + TOTAL_W) % TOTAL_W;
 
@@ -138,7 +137,22 @@ export default function Hero() {
 
   return (
     <section id="hero" className="hero">
-      <div className="hero-bg" />
+      <div className="hero-bg">
+        <DotField
+          dotRadius={3}
+          dotSpacing={16}
+          bulgeStrength={40}
+          glowRadius={200}
+          sparkle={false}
+          waveAmplitude={0}
+          cursorRadius={500}
+          cursorForce={0.15}
+          gradientFrom="rgba(255, 216, 95, 0.9)"
+          gradientTo="rgba(200, 255, 0, 0.5)"
+          glowColor="#ffd85f"
+        />
+      </div>
+      <div className="hero-frost" />
       <div className="hero-content">
         <h1 className="hero-title">
           <span className="hero-title-line accent">AYSTBA</span>
