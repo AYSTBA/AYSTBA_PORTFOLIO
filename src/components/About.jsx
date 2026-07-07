@@ -1,6 +1,7 @@
 import { Award, FolderGit2, Code, Users, Mail } from 'lucide-react';
 import { useLang } from '../context/LanguageContext';
 import BorderGlow from './BorderGlow';
+import PlasmaWave from './PlasmaWave';
 
 export default function About() {
   const { t } = useLang();
@@ -20,6 +21,7 @@ export default function About() {
 
   return (
     <section id="about" className="section about">
+      <PlasmaWave colors={['#A855F7', '#06B6D4']} speed1={0.05} speed2={0.05} />
       <div className="container">
         <div className="about-grid">
           <BorderGlow {...cardProps} className="about-card about-card-avatar">

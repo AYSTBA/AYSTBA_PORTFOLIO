@@ -1,45 +1,3 @@
-## Integrate the <PlasmaWave /> component from React Bits
-
-You are helping integrate an open-source React component into an existing application.
-
-### Component: PlasmaWave
-### Variant: JavaScript + CSS
-### Dependencies: ogl
-
----
-
-### Usage Example
-```jsx
-import PlasmaWave from './PlasmaWave';
-  
-<PlasmaWave
-  colors={["#A855F7","#06B6D4"]}
-  speed1={0.05}
-  speed2={0.05}
-  focalLength={0.8}
-  bend1={1}
-  bend2={0.5}
-  dir2={1.0}
-  rotationDeg={0}
-/>
-```
-
-### Props
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| colors | [string, string] | ["#A855F7", "#06B6D4"] | Array of two hex colors — one for each plasma wave band. |
-| speed1 | number | 0.05 | Speed of the first plasma wave. |
-| speed2 | number | 0.05 | Speed of the second plasma wave. |
-| dir2 | number | 1.0 | Direction multiplier for the second wave. Use -1 to reverse. |
-| focalLength | number | 0.8 | Focal length of the camera projection. |
-| bend1 | number | 1 | Bend intensity of the first wave. |
-| bend2 | number | 0.5 | Bend intensity of the second wave. |
-| rotationDeg | number | 0 | Rotation angle of the scene in degrees. |
-| xOffset | number | 0 | Horizontal offset of the viewport. |
-| yOffset | number | 0 | Vertical offset of the viewport. |
-
-### Full Component Source
-```jsx
 import { useRef, useEffect } from 'react';
 import { Renderer, Camera, Transform, Program, Mesh, Geometry } from 'ogl';
 
@@ -279,21 +237,3 @@ export default function PlasmaWave(props) {
 
   return <div ref={containerRef} className="plasma-wave-container" />;
 }
-
-```
-
-### Component CSS
-```css
-.plasma-wave-container {
-  width: 100%;
-  height: 100%;
-}
-
-```
-
-### Integration Instructions
-1. Install any listed dependencies.
-2. Copy the component source into the appropriate directory in the project.
-3. Import the CSS file alongside the component.
-4. Import and render the component using the usage example above as a starting point.
-5. Adjust props as needed for the specific use case — refer to the props table for all available options.
