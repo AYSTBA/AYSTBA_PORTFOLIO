@@ -1,15 +1,15 @@
-import { useEffect, useRef, useMemo } from "react";
+import { useEffect, useRef, useMemo, useState } from "react";
 import DotField from "./DotField";
 
 var carouselItems = [
-  { color: "#2a3a2a", label: "Photography" },
-  { color: "#3a2a2a", label: "3D Render" },
-  { color: "#2a2a3a", label: "Brand Identity" },
-  { color: "#3a3a2a", label: "AI Art" },
-  { color: "#2a3a3a", label: "UI Design" },
-  { color: "#3a2a3a", label: "Game Art" },
-  { color: "#2a3a2a", label: "Poster" },
-  { color: "#2a3a3a", label: "Illustration" },
+  { color: "#2a3a2a", label: "Photography", img: "https://picsum.photos/seed/photography/400/500" },
+  { color: "#3a3a2a", label: "3D Render", img: "https://picsum.photos/seed/3drender/400/500" },
+  { color: "#2a2a3a", label: "Brand Identity", img: "https://picsum.photos/seed/brand/400/500" },
+  { color: "#3a3a2a", label: "AI Art", img: "https://picsum.photos/seed/aiart/400/500" },
+  { color: "#2a3a3a", label: "UI Design", img: "https://picsum.photos/seed/uidesign/400/500" },
+  { color: "#3a2a3a", label: "Game Art", img: "https://picsum.photos/seed/gameart/400/500" },
+  { color: "#2a3a2a", label: "Poster", img: "https://picsum.photos/seed/poster/400/500" },
+  { color: "#2a3a3a", label: "Illustration", img: "https://picsum.photos/seed/illustration/400/500" },
 ];
 
 var CARD_W = 180;
@@ -31,6 +31,10 @@ export default function Hero() {
   var dragStartOffset = useRef(0);
   var lastDragX = useRef(0);
   var lastDragT = useRef(0);
+
+  var [selectedItem, setSelectedItem] = useState(null);
+  var [modalStyle, setModalStyle] = useState({});
+  var [startRect, setStartRect] = useState(null);
 
   var doubled = useMemo(function() { return carouselItems.concat(carouselItems); }, []);
 
@@ -95,6 +99,85 @@ export default function Hero() {
     return function(el, i) { itemsRef.current[i] = el; };
   }, []);
 
+  var animateModal = function(startRect, isOpening) {
+    var targetW = 400;
+    var targetH = 500;
+    var targetX = (window.innerWidth - targetW) / 2;
+    var targetY = (window.innerHeight - targetH) / 2;
+
+    var startX = startRect.left;
+    var startY = startRect.top;
+    var startW = startRect.width;
+    var startH = startRect.height;
+
+    var duration = 400;
+    var startTime = performance.now();
+
+    var easeOutBack = function(t) {
+      var c1 = 1.70158;
+      var c3 = c1 + 1;
+      return 1 + c3 * Math.pow(t - 1, 3) + c1 * Math.pow(t - 1, 2);
+    };
+
+    var animate = function(now) {
+      var progress = Math.min((now - startTime) / duration, 1);
+      var eased = isOpening ? easeOutBack(progress) : 1 - progress;
+
+      var x = startX + (targetX - startX) * eased;
+      var y = startY + (targetY - startY) * eased;
+      var w = startW + (targetW - startW) * eased;
+      var h = startH + (targetH - startH) * eased;
+      var r = isOpening ? 15 * (1 - eased) : 0;
+
+      setModalStyle({
+        left: x + 'px',
+        top: y + 'px',
+        width: w + 'px',
+        height: h + 'px',
+        borderRadius: (12 + (8 * eased)) + 'px',
+        transform: 'rotate(' + r + 'deg)',
+        opacity: eased
+      });
+
+      if (progress < 1) {
+        requestAnimationFrame(animate);
+      } else if (!isOpening) {
+        setSelectedItem(null);
+      }
+    };
+
+    requestAnimationFrame(animate);
+  };
+
+  var handleCardClick = function(item, index) {
+    var el = itemsRef.current[index];
+    if (el) {
+      var rect = el.getBoundingClientRect();
+      setStartRect(rect);
+      setModalStyle({
+        left: rect.left + 'px',
+        top: rect.top + 'px',
+        width: rect.width + 'px',
+        height: rect.height + 'px',
+        borderRadius: '12px',
+        transform: 'rotate(0deg)',
+        opacity: 1
+      });
+      setSelectedItem(item);
+      setTimeout(function() {
+        animateModal(rect, true);
+      }, 50);
+    }
+  };
+
+  var handleClose = function() {
+    if (startRect) {
+      animateModal(startRect, false);
+    } else {
+      setSelectedItem(null);
+    }
+  };
+
   useEffect(function() {
     var el = containerRef.current;
     if (!el) return;
@@ -105,7 +188,6 @@ export default function Hero() {
       dragStartOffset.current = dragOffsetRef.current;
       lastDragX.current = e.clientX;
       lastDragT.current = performance.now();
-      el.setPointerCapture(e.pointerId);
     };
 
     var onMove = function(e) {
@@ -120,7 +202,20 @@ export default function Hero() {
       lastDragT.current = now;
     };
 
-    var onUp = function() { phaseRef.current = 2; };
+    var onUp = function(e) {
+      phaseRef.current = 2;
+      var dragDistance = Math.abs(e.clientX - dragStartX.current);
+      if (dragDistance < 10) {
+        var target = e.target.closest('.hero-carousel-item');
+        if (target) {
+          var index = Array.from(target.parentElement.children).indexOf(target);
+          var item = doubled[index];
+          if (item) {
+            handleCardClick(item, index);
+          }
+        }
+      }
+    };
 
     el.addEventListener("pointerdown", onDown);
     el.addEventListener("pointermove", onMove);
@@ -137,6 +232,9 @@ export default function Hero() {
 
   return (
     <section id="hero" className="hero">
+      <div className="hero-bg-image">
+        <img src="https://picsum.photos/seed/herobg/1920/1080" alt="Hero Background" />
+      </div>
       <div className="hero-bg">
         <DotField
           dotRadius={3}
@@ -163,15 +261,32 @@ export default function Hero() {
         <div className="hero-carousel-track" ref={trackRef}>
           {doubled.map(function(item, i) {
             return (
-              <div key={i} className="hero-carousel-item" ref={function(el) { setItemRef(el, i); }}>
-                <div className="hero-carousel-placeholder" style={{ background: item.color }}>
-                  {item.label}
-                </div>
+              <div 
+                key={i} 
+                className="hero-carousel-item" 
+                ref={function(el) { setItemRef(el, i); }}
+              >
+                <img src={item.img} alt={item.label} className="hero-carousel-image" />
+                <div className="hero-carousel-label">{item.label}</div>
               </div>
             );
           })}
         </div>
       </div>
+
+      {selectedItem && (
+        <div className="hero-card-modal" onClick={handleClose}>
+          <div 
+            className="hero-card-modal-content" 
+            style={modalStyle}
+            onClick={function(e) { e.stopPropagation(); }}
+          >
+            <img src={selectedItem.img} alt={selectedItem.label} className="hero-card-modal-image" />
+            <div className="hero-card-modal-label">{selectedItem.label}</div>
+            <button className="hero-card-modal-close" onClick={handleClose}>✕</button>
+          </div>
+        </div>
+      )}
     </section>
   );
 }

@@ -24,17 +24,17 @@ export default function Projects() {
         <div className="projects-grid">
           {projects.map((p, i) => (
             <motion.a href={p.url} target="_blank" rel="noopener noreferrer" key={i} className="project-card" custom={i} initial="hidden" whileInView="visible" viewport={{ once: true, margin: '-40px' }} variants={v}>
-                <div className="project-card-img">
-                  <div className="project-card-img-placeholder" style={{ background: 'linear-gradient(135deg,' + p.color + ',' + p.color + 'ee)' }}>
-                    <ArrowUpRight size={28} style={{ opacity: 0.15 }} />
-                  </div>
+              <div className="project-card-img">
+                <div className="project-card-img-placeholder" style={{ background: 'linear-gradient(135deg,' + p.color + ',' + p.color + 'ee)' }}>
+                  <ArrowUpRight size={28} style={{ opacity: 0.15 }} />
                 </div>
-                <div className="project-card-body">
-                  <p className="project-card-tag">{p.tag}</p>
-                  <h3 className="project-card-title">{p.title}</h3>
-                  <p className="project-card-desc">{t(p.descKey)}</p>
-                </div>
-              </motion.a>
+              </div>
+              <div className="project-card-body">
+                <p className="project-card-tag">{p.tag}</p>
+                <h3 className="project-card-title">{p.title}</h3>
+                <p className="project-card-desc">{t(p.descKey)}</p>
+              </div>
+            </motion.a>
           ))}
         </div>
       </div>
