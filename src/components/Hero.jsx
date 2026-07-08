@@ -1,5 +1,6 @@
 import { useEffect, useRef, useMemo, useState } from "react";
-import DotField from "./DotField";
+import { gsap } from "gsap";
+import heroBg from "../assets/hero-bg.jpg";
 
 var carouselItems = [
   { color: "#2a3a2a", label: "Photography", img: "https://picsum.photos/seed/photography/400/500" },
@@ -17,10 +18,14 @@ var CARD_GAP = 52;
 var CARD_STEP = CARD_W + CARD_GAP;
 var TOTAL_W = carouselItems.length * CARD_STEP;
 
-export default function Hero() {
+export default function Hero({ openingComplete }) {
   var trackRef = useRef(null);
   var containerRef = useRef(null);
   var itemsRef = useRef([]);
+  var titleLine1Ref = useRef(null);
+  var titleLine2Ref = useRef(null);
+  var modalRef = useRef(null);
+  var modalContentRef = useRef(null);
 
   var autoOffsetRef = useRef(0);
   var dragOffsetRef = useRef(0);
@@ -33,10 +38,47 @@ export default function Hero() {
   var lastDragT = useRef(0);
 
   var [selectedItem, setSelectedItem] = useState(null);
-  var [modalStyle, setModalStyle] = useState({});
-  var [startRect, setStartRect] = useState(null);
+  var [showModal, setShowModal] = useState(false);
+  var [isAnimating, setIsAnimating] = useState(false);
+
+  var startRectRef = useRef(null);
+  var startTransformRef = useRef({ scale: 1, rotate: 0 });
 
   var doubled = useMemo(function() { return carouselItems.concat(carouselItems); }, []);
+
+  useEffect(() => {
+    if (!openingComplete) return;
+
+    gsap.set([titleLine1Ref.current, titleLine2Ref.current], {
+      opacity: 0,
+      x: -100,
+      scaleX: 0.8,
+      skewX: -10
+    });
+
+    const tl = gsap.timeline({
+      defaults: {
+        ease: 'power4.out',
+        duration: 0.8
+      }
+    });
+
+    tl.to(titleLine1Ref.current, {
+      opacity: 1,
+      x: 0,
+      scaleX: 1,
+      skewX: 0,
+      duration: 1
+    })
+    .to(titleLine2Ref.current, {
+      opacity: 1,
+      x: 0,
+      scaleX: 1,
+      skewX: 0,
+      duration: 1
+    }, 0.2);
+
+  }, [openingComplete]);
 
   useEffect(function() {
     var prev = 0;
@@ -99,83 +141,147 @@ export default function Hero() {
     return function(el, i) { itemsRef.current[i] = el; };
   }, []);
 
-  var animateModal = function(startRect, isOpening) {
-    var targetW = 400;
-    var targetH = 500;
+  var animateOpen = function() {
+    if (!modalContentRef.current || !startRectRef.current) return;
+
+    var rect = startRectRef.current;
+    var transform = startTransformRef.current;
+    var targetW = Math.min(520, window.innerWidth - 40);
+    var targetH = Math.min(650, window.innerHeight - 80);
     var targetX = (window.innerWidth - targetW) / 2;
     var targetY = (window.innerHeight - targetH) / 2;
 
-    var startX = startRect.left;
-    var startY = startRect.top;
-    var startW = startRect.width;
-    var startH = startRect.height;
+    gsap.set(modalContentRef.current, {
+      left: rect.left,
+      top: rect.top,
+      width: rect.width,
+      height: rect.height,
+      scale: transform.scale,
+      rotate: transform.rotate,
+      borderRadius: 12,
+      opacity: 1,
+      x: 0,
+      y: 0
+    });
 
-    var duration = 400;
-    var startTime = performance.now();
+    gsap.to(modalRef.current, {
+      opacity: 1,
+      duration: 0.4,
+      ease: 'power2.out'
+    });
 
-    var easeOutBack = function(t) {
-      var c1 = 1.70158;
-      var c3 = c1 + 1;
-      return 1 + c3 * Math.pow(t - 1, 3) + c1 * Math.pow(t - 1, 2);
-    };
-
-    var animate = function(now) {
-      var progress = Math.min((now - startTime) / duration, 1);
-      var eased = isOpening ? easeOutBack(progress) : 1 - progress;
-
-      var x = startX + (targetX - startX) * eased;
-      var y = startY + (targetY - startY) * eased;
-      var w = startW + (targetW - startW) * eased;
-      var h = startH + (targetH - startH) * eased;
-      var r = isOpening ? 15 * (1 - eased) : 0;
-
-      setModalStyle({
-        left: x + 'px',
-        top: y + 'px',
-        width: w + 'px',
-        height: h + 'px',
-        borderRadius: (12 + (8 * eased)) + 'px',
-        transform: 'rotate(' + r + 'deg)',
-        opacity: eased
-      });
-
-      if (progress < 1) {
-        requestAnimationFrame(animate);
-      } else if (!isOpening) {
-        setSelectedItem(null);
+    var tl = gsap.timeline({
+      defaults: {
+        ease: 'power4.out'
+      },
+      onComplete: function() {
+        setIsAnimating(false);
       }
-    };
+    });
 
-    requestAnimationFrame(animate);
+    tl.to(modalContentRef.current, {
+      duration: 0.7,
+      left: targetX,
+      top: targetY - 60,
+      width: targetW,
+      height: targetH,
+      scale: 1.15,
+      rotate: 0,
+      borderRadius: 28
+    })
+    .to(modalContentRef.current, {
+      duration: 0.4,
+      top: targetY,
+      scale: 1,
+      borderRadius: 24,
+      ease: 'power2.out'
+    });
+  };
+
+  var animateClose = function() {
+    if (!modalContentRef.current || !startRectRef.current) {
+      setShowModal(false);
+      setSelectedItem(null);
+      setIsAnimating(false);
+      return;
+    }
+
+    var rect = startRectRef.current;
+    var transform = startTransformRef.current;
+
+    gsap.to(modalRef.current, {
+      opacity: 0,
+      duration: 0.35,
+      ease: 'power2.in'
+    });
+
+    var tl = gsap.timeline({
+      defaults: {
+        ease: 'power4.inOut'
+      },
+      onComplete: function() {
+        setShowModal(false);
+        setSelectedItem(null);
+        setIsAnimating(false);
+      }
+    });
+
+    tl.to(modalContentRef.current, {
+      duration: 0.15,
+      top: '+=30',
+      scale: 0.95,
+      ease: 'power2.in'
+    })
+    .to(modalContentRef.current, {
+      duration: 0.5,
+      left: rect.left,
+      top: rect.top,
+      width: rect.width,
+      height: rect.height,
+      scale: transform.scale,
+      rotate: transform.rotate,
+      borderRadius: 12
+    });
   };
 
   var handleCardClick = function(item, index) {
-    var el = itemsRef.current[index];
-    if (el) {
-      var rect = el.getBoundingClientRect();
-      setStartRect(rect);
-      setModalStyle({
-        left: rect.left + 'px',
-        top: rect.top + 'px',
-        width: rect.width + 'px',
-        height: rect.height + 'px',
-        borderRadius: '12px',
-        transform: 'rotate(0deg)',
-        opacity: 1
-      });
-      setSelectedItem(item);
-      setTimeout(function() {
-        animateModal(rect, true);
-      }, 50);
+    if (isAnimating || showModal) return;
+
+    var target = itemsRef.current[index];
+    if (!target) return;
+
+    var rect = target.getBoundingClientRect();
+    var computedStyle = window.getComputedStyle(target);
+    var transform = computedStyle.transform || 'none';
+    
+    var scale = 1;
+    var rotate = 0;
+    if (transform !== 'none') {
+      var match = transform.match(/matrix\(([^,]+),\s*([^,]+),\s*([^,]+),\s*([^,]+),/);
+      if (match) {
+        var a = parseFloat(match[1]);
+        var b = parseFloat(match[2]);
+        scale = Math.sqrt(a * a + b * b);
+        rotate = Math.atan2(b, a) * (180 / Math.PI);
+      }
     }
+    
+    startRectRef.current = rect;
+    startTransformRef.current = { scale: scale, rotate: rotate };
+    setSelectedItem(item);
+    setShowModal(true);
+    setIsAnimating(true);
+
+    requestAnimationFrame(function() {
+      animateOpen();
+    });
   };
 
-  var handleClose = function() {
-    if (startRect) {
-      animateModal(startRect, false);
-    } else {
-      setSelectedItem(null);
-    }
+  var handleClose = function(e) {
+    if (e) e.stopPropagation();
+    if (isAnimating || !showModal) return;
+    setIsAnimating(true);
+    animateClose();
   };
 
   useEffect(function() {
@@ -233,28 +339,14 @@ export default function Hero() {
   return (
     <section id="hero" className="hero">
       <div className="hero-bg-image">
-        <img src="https://picsum.photos/seed/herobg/1920/1080" alt="Hero Background" />
+        <img src={heroBg} alt="Hero Background" />
       </div>
-      <div className="hero-bg">
-        <DotField
-          dotRadius={3}
-          dotSpacing={16}
-          bulgeStrength={40}
-          glowRadius={200}
-          sparkle={false}
-          waveAmplitude={0}
-          cursorRadius={500}
-          cursorForce={0.15}
-          gradientFrom="rgba(255, 216, 95, 0.9)"
-          gradientTo="rgba(200, 255, 0, 0.5)"
-          glowColor="#ffd85f"
-        />
-      </div>
+      <div className="hero-bg" />
       <div className="hero-frost" />
       <div className="hero-content">
         <h1 className="hero-title">
-          <span className="hero-title-line accent">AYSTBA</span>
-          <span className="hero-title-line outline">PORTFOLIO</span>
+          <span className="hero-title-line accent" ref={titleLine1Ref}>AYSTBA</span>
+          <span className="hero-title-line outline" ref={titleLine2Ref}>PORTFOLIO</span>
         </h1>
       </div>
       <div className="hero-carousel" ref={containerRef}>
@@ -274,11 +366,16 @@ export default function Hero() {
         </div>
       </div>
 
-      {selectedItem && (
-        <div className="hero-card-modal" onClick={handleClose}>
+      {showModal && selectedItem && (
+        <div 
+          ref={modalRef} 
+          className="hero-card-modal" 
+          style={{ opacity: 0 }}
+          onClick={handleClose}
+        >
           <div 
-            className="hero-card-modal-content" 
-            style={modalStyle}
+            ref={modalContentRef} 
+            className="hero-card-modal-content"
             onClick={function(e) { e.stopPropagation(); }}
           >
             <img src={selectedItem.img} alt={selectedItem.label} className="hero-card-modal-image" />

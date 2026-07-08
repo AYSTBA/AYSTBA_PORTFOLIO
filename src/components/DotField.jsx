@@ -32,14 +32,20 @@ const DotField = memo(({
   propsRef.current = { dotRadius, dotSpacing, cursorRadius, cursorForce, bulgeOnly, bulgeStrength, sparkle, waveAmplitude, gradientFrom, gradientTo };
   const rebuildRef = useRef(null);
   const glowIdRef = useRef(`dot-field-glow-${Math.random().toString(36).slice(2, 9)}`);
+  const hasInitializedRef = useRef(false);
 
   useEffect(() => {
+    if (hasInitializedRef.current) return;
+    hasInitializedRef.current = true;
+
     const canvas = canvasRef.current;
     const glowEl = glowRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext('2d', { alpha: true });
-    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
     let resizeTimer;
+    let isVisible = true;
+    let isPageVisible = !document.hidden;
 
     function resize() {
       clearTimeout(resizeTimer);
@@ -210,13 +216,43 @@ const DotField = memo(({
 
       ctx.fill();
 
-      rafRef.current = requestAnimationFrame(tick);
+      if (isVisible && isPageVisible) {
+        rafRef.current = requestAnimationFrame(tick);
+      }
     }
+
+    const startAnimation = () => {
+      if (rafRef.current === null && isVisible && isPageVisible) {
+        rafRef.current = requestAnimationFrame(tick);
+      }
+    };
+
+    const stopAnimation = () => {
+      if (rafRef.current !== null) {
+        cancelAnimationFrame(rafRef.current);
+        rafRef.current = null;
+      }
+    };
+
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        isVisible = entry.isIntersecting;
+        isVisible ? startAnimation() : stopAnimation();
+      },
+      { threshold: 0 }
+    );
+    io.observe(canvas);
+
+    const onVisibilityChange = () => {
+      isPageVisible = !document.hidden;
+      isPageVisible ? startAnimation() : stopAnimation();
+    };
+    document.addEventListener('visibilitychange', onVisibilityChange);
 
     doResize();
     window.addEventListener('resize', resize);
     window.addEventListener('mousemove', onMouseMove, { passive: true });
-    rafRef.current = requestAnimationFrame(tick);
+    startAnimation();
 
     rebuildRef.current = () => {
       const { w, h } = sizeRef.current;
@@ -229,6 +265,8 @@ const DotField = memo(({
       clearTimeout(resizeTimer);
       window.removeEventListener('resize', resize);
       window.removeEventListener('mousemove', onMouseMove);
+      document.removeEventListener('visibilitychange', onVisibilityChange);
+      io.disconnect();
     };
   }, []);
 
