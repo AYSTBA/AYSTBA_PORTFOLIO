@@ -5,6 +5,8 @@ export const translations = {
   'nav.contact': { en: 'Contact', zh: '联系我' },
   
   'hero.desc': { en: 'Creative Developer & Designer', zh: '创意开发者与设计师' },
+  'hero.title1': { en: 'AYSTBA', zh: 'AYSTBA' },
+  'hero.title2': { en: 'PORTFOLIO', zh: '作品集' },
   
   'about.label': { en: 'About Me', zh: '关于我' },
   'about.resumeTitle': { en: 'Resume', zh: '个人经历' },
@@ -60,12 +62,12 @@ export const translations = {
   'projects.label': { en: 'Featured Work', zh: '精选作品' },
   'projects.desc': { en: 'Building impactful digital solutions from concept to deployment.', zh: '从概念到部署，构建有影响力的数字解决方案。' },
   'projects.mox.desc': { en: 'MiMo AI Desktop Client - Interacting with Xiaomi MiMo models through official OpenAI-compatible API', zh: '小米MiMo AI桌面客户端 - 通过官方OpenAI兼容API与MiMo模型交互' },
-  'projects.danci.desc': { en: 'Intelligent Word Learning System based on Ebbinghaus Forgetting Curve theory', zh: '基于艾宾浩斯遗忘曲线理论的智能单词学习系统' },
+  'projects.danci.desc': { en: 'Personal portfolio website built with React, GSAP and WebGL — featuring dynamic gradient backgrounds, particle effects and high-end creative agency style animations', zh: '个人作品集网站，使用 React、GSAP 和 WebGL 构建 — 包含动态渐变背景、粒子效果和高端创意机构风格动画' },
   'projects.ideabutler.desc': { en: 'Smart inspiration management skill that auto-captures ideas and AI-scores them', zh: '智能灵感管理工具，自动捕获想法并进行AI评分' },
   'projects.encryption.desc': { en: 'Multi-algorithm encryption system supporting text and file encryption', zh: '支持文本和文件加密的多算法加密系统' },
   
   'contact.label': { en: 'Get in Touch', zh: '联系我' },
-  'contact.desc': { en: 'Open for collaborations, creative projects, and interesting conversations.\nBased in Shenzhen, China — available worldwide.', zh: '欢迎合作、创意项目和有趣的交流。\n位于中国深圳 — 面向全球。' },
+  'contact.desc': { en: 'Open for collaborations, creative projects, and interesting conversations.\nBased in Shenzhen, China.', zh: '欢迎合作、创意项目和有趣的交流。\n位于中国深圳。' },
   'contact.email': { en: 'Email', zh: '邮箱' },
   'contact.send': { en: 'Send Message', zh: '发送消息' },
 };

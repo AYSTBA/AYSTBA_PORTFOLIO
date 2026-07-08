@@ -66,7 +66,7 @@ export default function About() {
   const info = [
     { label: t('about.identityLabel'), value: t('about.identity') },
     { label: t('about.servicesLabel'), value: t('about.services') },
-    { label: t('about.phoneLabel'), value: '176****0062' },
+    { label: 'GitHub', value: 'AYSTBA' },
     { label: t('about.emailLabel'), value: 'AYSTBA_aystba@outlook.com' },
   ];
 

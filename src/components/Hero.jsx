@@ -1,6 +1,7 @@
 import { useEffect, useRef, useMemo, useState } from "react";
 import { gsap } from "gsap";
 import heroBg from "../assets/hero-bg.jpg";
+import { useLang } from "../context/LanguageContext";
 
 var carouselItems = [
   { color: "#2a3a2a", label: "Photography", img: "https://picsum.photos/seed/photography/400/500" },
@@ -19,6 +20,7 @@ var CARD_STEP = CARD_W + CARD_GAP;
 var TOTAL_W = carouselItems.length * CARD_STEP;
 
 export default function Hero({ openingComplete }) {
+  var { t } = useLang();
   var trackRef = useRef(null);
   var containerRef = useRef(null);
   var itemsRef = useRef([]);
@@ -345,8 +347,8 @@ export default function Hero({ openingComplete }) {
       <div className="hero-frost" />
       <div className="hero-content">
         <h1 className="hero-title">
-          <span className="hero-title-line accent" ref={titleLine1Ref}>AYSTBA</span>
-          <span className="hero-title-line outline" ref={titleLine2Ref}>PORTFOLIO</span>
+          <span className="hero-title-line accent" ref={titleLine1Ref}>{t('hero.title1')}</span>
+          <span className="hero-title-line outline" ref={titleLine2Ref}>{t('hero.title2')}</span>
         </h1>
       </div>
       <div className="hero-carousel" ref={containerRef}>
