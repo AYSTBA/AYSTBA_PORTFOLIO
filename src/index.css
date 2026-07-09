@@ -76,7 +76,7 @@ img { display: block; max-width: 100%; }
 
 .navbar-mobile-overlay { position: fixed; inset: 0; z-index: 200; background: rgba(0,0,0,0.6); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); pointer-events: auto; }
 
-.navbar-mobile-panel { position: fixed; top: 0; right: 0; bottom: 0; width: min(320px, 80vw); z-index: 210; background: #0c0c0c; border-left: 1px solid rgba(255,255,255,0.06); display: flex; flex-direction: column; padding: 0; box-shadow: -10px 0 40px rgba(0,0,0,0.5); }
+.navbar-mobile-panel { position: fixed; top: 0; right: 0; bottom: 0; width: min(320px, 80vw); z-index: 210; background: #0c0c0c; border-left: 1px solid rgba(255,255,255,0.06); display: flex; flex-direction: column; padding: 0; box-shadow: -10px 0 40px rgba(0,0,0,0.5); transform: translateX(100%); }
 .navbar-mobile-header { display: flex; align-items: center; justify-content: space-between; padding: 20px 24px; border-bottom: 1px solid rgba(255,255,255,0.06); }
 .navbar-mobile-title { font-size: 13px; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; color: rgba(255,255,255,0.4); }
 .navbar-mobile-close { background: none; border: none; color: #fff; cursor: pointer; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border-radius: 50%; transition: background 0.2s; }
@@ -359,6 +359,7 @@ img { display: block; max-width: 100%; }
   
   .contact-title { font-size: clamp(24px, 7vw, 40px); }
 }
+
 
 
 
