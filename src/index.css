@@ -32,6 +32,9 @@
   height: 100%;
 }
 
+html { scroll-behavior: smooth; scrollbar-width: thin; scrollbar-color: #333 #0c0c0c; overflow-x: hidden; }
+body { overflow-x: hidden; width: 100%; }
+#root { overflow-x: hidden; width: 100%; }
 *,*::before,*::after { margin:0; padding:0; box-sizing:border-box; }
 body { font-family: "Inter", -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif; background: var(--bg-primary); color: var(--text-primary); line-height: 1.6; overflow-x: hidden; -webkit-font-smoothing: antialiased; }
 main {
@@ -359,6 +362,7 @@ img { display: block; max-width: 100%; }
   
   .contact-title { font-size: clamp(24px, 7vw, 40px); }
 }
+
 
 
 
