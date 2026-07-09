@@ -125,7 +125,7 @@ export default function Hero({ openingComplete }) {
         var scale = 1 - Math.abs(nx) * 0.05;
         var rot = nx * 1.8;
 
-        el.style.transform = "scale(" + scale + ") rotate(" + rot + "deg)";
+  var rot = nx * (cw < 768 ? 0 : 1.8);
         el.style.transition = "none";
       }
 
