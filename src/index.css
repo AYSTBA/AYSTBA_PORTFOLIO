@@ -24,7 +24,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  z-index: -1;
+  z-index: 0;
   pointer-events: none;
 }
 .grainient-bg {
@@ -33,8 +33,12 @@
 }
 
 *,*::before,*::after { margin:0; padding:0; box-sizing:border-box; }
-html { scroll-behavior: smooth; scrollbar-width: thin; scrollbar-color: #333 #0c0c0c; }
-body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif; background: var(--bg-primary); color: var(--text-primary); line-height: 1.6; overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+body { font-family: "Inter", -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif; background: var(--bg-primary); color: var(--text-primary); line-height: 1.6; overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+main {
+  position: relative;
+  z-index: 1;
+  background: transparent;
+}
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: #0c0c0c; }
 ::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
@@ -207,7 +211,8 @@ img { display: block; max-width: 100%; }
 .project-card-reverse { flex-direction: row-reverse; }
 .project-card-img { width: 55%; height: 100%; background: var(--bg-secondary); overflow: hidden; flex-shrink: 0; }
 .project-card-image { width: 100%; height: 100%; object-fit: cover; object-position: left; }
-.project-card-body { padding: 32px; flex: 1; display: flex; flex-direction: column; justify-content: center; }
+.project-card-body {
+
 .project-card-number { font-size: 64px; font-weight: 900; color: var(--accent); opacity: 0.15; line-height: 1; margin-bottom: 8px; }
 .project-card-tag { font-size: 11px; font-weight: 600; letter-spacing: 0.12em; color: var(--accent); text-transform: uppercase; margin-bottom: 12px; }
 .project-card-title { font-size: 24px; font-weight: 700; margin-bottom: 10px; }
@@ -290,7 +295,8 @@ img { display: block; max-width: 100%; }
   .project-card { height: auto; flex-direction: column; }
   .project-card-reverse { flex-direction: column; }
   .project-card-img { width: 100%; height: 200px; }
-  .project-card-body { padding: 20px; }
+  .project-card-body {
+
   .project-card-number { font-size: 48px; }
   .project-card-title { font-size: 20px; }
   .project-card-desc { font-size: 13px; }
@@ -330,4 +336,6 @@ img { display: block; max-width: 100%; }
   
   .contact-title { font-size: clamp(24px, 7vw, 40px); }
 }
+
+
 
