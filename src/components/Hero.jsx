@@ -1,5 +1,6 @@
-import { useEffect, useRef, useMemo, useState } from "react";
+﻿import { useEffect, useRef, useMemo, useState } from "react";
 import { gsap } from "gsap";
+import DotField from "./DotField";
 import heroBg from "../assets/hero-bg.jpg";
 import { useLang } from "../context/LanguageContext";
 
@@ -341,14 +342,29 @@ export default function Hero({ openingComplete }) {
   return (
     <section id="hero" className="hero">
       <div className="hero-bg-image">
-        <img src={heroBg} alt="Hero Background" />
+        <img src={heroBg} alt="" />
       </div>
       <div className="hero-bg" />
       <div className="hero-frost" />
+      <div className="hero-dotfield">
+        <DotField
+          dotRadius={1.5}
+          dotSpacing={21}
+          cursorRadius={500}
+          cursorForce={0.15}
+          bulgeStrength={67}
+          glowRadius={160}
+          sparkle={false}
+          waveAmplitude={0}
+          gradientFrom="rgba(200, 255, 0, 0.35)"
+          gradientTo="rgba(120, 200, 150, 0.25)"
+          glowColor="#c8ff00"
+        />
+      </div>
       <div className="hero-content">
         <h1 className="hero-title">
-          <span className="hero-title-line accent" ref={titleLine1Ref}>{t('hero.title1')}</span>
-          <span className="hero-title-line outline" ref={titleLine2Ref}>{t('hero.title2')}</span>
+          <span className="hero-title-line accent" ref={titleLine1Ref}>{t("hero.title1")}</span>
+          <span className="hero-title-line outline" ref={titleLine2Ref}>{t("hero.title2")}</span>
         </h1>
       </div>
       <div className="hero-carousel" ref={containerRef}>
