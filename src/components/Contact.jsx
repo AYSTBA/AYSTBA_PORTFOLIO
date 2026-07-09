@@ -19,7 +19,7 @@ export default function Contact() {
     { label: 'Bilibili', href: 'https://space.bilibili.com/3546948852255258', icon: <Monitor size={18} /> },
     { label: 'GitHub', href: 'https://github.com/AYSTBA', icon: <GitBranch size={18} /> },
     { label: 'Outlook', href: 'mailto:AYSTBA_aystba@outlook.com', icon: <Mail size={18} /> },
-    { label: 'QQ', href: '#', icon: <MessageCircle size={18} /> },
+    { label: 'QQ', href: 'https://qm.qq.com/q/WiCGnZNoQs', icon: <MessageCircle size={18} /> },
   ];
 
   useEffect(() => {
