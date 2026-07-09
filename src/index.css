@@ -276,10 +276,10 @@ img { display: block; max-width: 100%; }
   .nav-wrapper .lang-toggle { display: none; }
   
   .hero { min-height: 560px; }
-  .hero-content { padding: 100px 16px 40px; }
+  .hero-content { padding: 130px 16px 40px; }
   .hero-title { font-size: clamp(30px, 12vw, 52px); letter-spacing: -0.03em; line-height: 0.95; }
   .hero-title-line.outline { -webkit-text-stroke: 1px rgba(255,255,255,0.3); }
-  .hero-carousel-item { width: 110px; height: 150px; border-radius: 10px; }
+  .hero-carousel-item { width: 110px; height: 150px; border-radius: 10px; transform: none !important; }
   .hero-carousel-track { gap: 18px; }
   .hero-carousel { padding-bottom: 20px; }
   
@@ -341,9 +341,9 @@ img { display: block; max-width: 100%; }
 }
 @media (max-width: 480px) {
   .hero-title { font-size: clamp(26px, 13vw, 44px); }
-  .hero-carousel-item { width: 90px; height: 125px; border-radius: 8px; }
+  .hero-carousel-item { width: 90px; height: 125px; border-radius: 8px; transform: none !important; }
   .hero-carousel-track { gap: 12px; }
-  .hero-content { padding: 80px 12px 24px; }
+  .hero-content { padding: 110px 12px 24px; }
   
   .about-resume-avatar { width: 120px; height: 120px; }
   .about-resume-avatar-wrap { min-height: 240px; }
@@ -359,6 +359,7 @@ img { display: block; max-width: 100%; }
   
   .contact-title { font-size: clamp(24px, 7vw, 40px); }
 }
+
 
 
 
