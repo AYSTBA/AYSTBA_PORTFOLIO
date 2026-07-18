@@ -7,7 +7,6 @@
 [![React](https://img.shields.io/badge/React-19-61DAFB?logo=react)](https://react.dev)
 [![Vite](https://img.shields.io/badge/Vite-8-646CFF?logo=vite)](https://vitejs.dev)
 [![GSAP](https://img.shields.io/badge/GSAP-3-88CE02?logo=greensock)](https://gsap.com)
-[![License](https://img.shields.io/badge/License-MIT-blue)](#license)
 
 </div>
 
