@@ -327,7 +327,7 @@ jobs:
 
 ## 📄 许可证
 
-本项目基于 **MIT License** 开源 — 详见 [LICENSE](./LICENSE) 文件。
+本项目基于 **GLT 30** 开源 — 详见 [LICENSE](./LICENSE) 文件。
 
 ---
 
