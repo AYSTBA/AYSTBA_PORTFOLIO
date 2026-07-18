@@ -1,9 +1,17 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
-  <circle cx="50" cy="50" r="45" fill="#78cb6e"/>
-  <circle cx="35" cy="55" r="8" fill="#0c0c0c"/>
-  <circle cx="65" cy="55" r="8" fill="#0c0c0c"/>
-  <ellipse cx="50" cy="72" rx="10" ry="6" fill="#0c0c0c"/>
-  <path d="M30 45 Q35 40 45 45" fill="none" stroke="#0c0c0c" stroke-width="2" stroke-linecap="round"/>
-  <path d="M55 45 Q65 40 70 45" fill="none" stroke="#0c0c0c" stroke-width="2" stroke-linecap="round"/>
-  <path d="M42 80 Q50 88 58 80" fill="none" stroke="#0c0c0c" stroke-width="2" stroke-linecap="round"/>
+  <circle cx="50" cy="50" r="48" fill="#0c0c0c" stroke="#C8FF00" stroke-width="2"/>
+  <circle cx="50" cy="58" r="22" fill="#0c0c0c" stroke="#C8FF00" stroke-width="2"/>
+  <!-- 左眼 -->
+  <circle cx="32" cy="42" r="8" fill="#C8FF00"/>
+  <circle cx="32" cy="42" r="3" fill="#0c0c0c"/>
+  <!-- 右眼 -->
+  <circle cx="68" cy="42" r="8" fill="#C8FF00"/>
+  <circle cx="68" cy="42" r="3" fill="#0c0c0c"/>
+  <!-- 鼻子三角形 -->
+  <path d="M50 48 L55 54 L45 54 Z" fill="#C8FF00" opacity="0.6"/>
+  <!-- 牙齿 -->
+  <rect x="42" y="62" width="6" height="8" rx="1" fill="#C8FF00"/>
+  <rect x="52" y="62" width="6" height="8" rx="1" fill="#C8FF00"/>
+  <rect x="42" y="70" width="6" height="6" rx="1" fill="#0c0c0c" stroke="#C8FF00" stroke-width="1"/>
+  <rect x="52" y="70" width="6" height="6" rx="1" fill="#0c0c0c" stroke="#C8FF00" stroke-width="1"/>
 </svg>
