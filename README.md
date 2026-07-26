@@ -30,7 +30,7 @@
 
 这是一个具有**高端创意工作室风格**的个人作品集网站，展示了 AYSTBA 的作品、技能和履历。网站以**暗黑视觉主题**为基调，融合了 WebGL 动态渐变背景、Canvas 粒子场、边缘感知发光效果以及大量基于滚动触发的 GSAP 动画，营造出沉浸式的浏览体验。
 
-> 🌐 **在线预览：** [aystba-portfolio.vercel.app](https://github.com/AYSTBA/AYSTBA_PORTFOLIO)（部署后替换）
+> 🌐 **在线预览：** [xsy.zxsz007.cn]([https://github.com/AYSTBA/AYSTBA_PORTFOLIO](https://xsy.zxsz007.cn/))
 
 ---
 
