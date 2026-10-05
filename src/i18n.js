@@ -14,7 +14,7 @@ export const translations = {
   'about.greeting': { en: 'Hi, I am AYSTBA!', zh: 'Hi，我是 AYSTBA！' },
   'about.desc': { en: 'A developer passionate about creating practical and beautiful digital products.', zh: '热爱创造的开发者，专注于构建实用且美观的数字产品。' },
   'about.role': { en: 'Developer / Designer / Creator', zh: '开发者 / 设计师 / 创作者' },
-  'about.bio': { en: 'Started coding as an independent developer in 2020, spent 2021–2024 competing in various tech contests and hackathons, then founded UPCHIS Studio in 2025. Now I build desktop clients, AI toolchains and EdTech products while pushing creative experiments.\n\nTech stack: React, Vue, Python, Rust, Tauri. Currently focused on moX, danci007.com, IdeaButler and more.', zh: '2020 年起步做独立开发者，2021–2024 连续参加各类技术赛事和创客比赛并多次获奖，2025 年创立 UPCHIS 数字创意工作室。现在一边做工作室的暗黑实验风格项目，一边持续开发独立产品——桌面客户端、AI 工具链和教育科技。\n\n技术栈：React、Vue、Python、Rust、Tauri。在做的项目有 moX、danci007.com、IdeaButler 等。' },
+  'about.bio': { en: 'Started coding as an independent developer in 2020, spent 2021–2024 competing in various tech contests and hackathons, then founded UPCHIS Studio in 2025. Now I build desktop clients, AI toolchains and EdTech products while pushing creative experiments.\n\nTech stack: React, Vue, Python, Rust, Tauri. Currently focused on moX, danci007.com, upchis.work and more.', zh: '2020 年起步做独立开发者，2021–2024 连续参加各类技术赛事和创客比赛并多次获奖，2025 年创立 UPCHIS 数字创意工作室。现在一边做工作室的暗黑实验风格项目，一边持续开发独立产品——桌面客户端、AI 工具链和教育科技。\n\n技术栈：React、Vue、Python、Rust、Tauri。在做的项目有 moX、danci007.com、upchis.work 等。' },
   'about.identityLabel': { en: 'Role', zh: '职业身份' },
   'about.identity': { en: 'Full-stack Developer / Creative Designer', zh: '全栈开发者 / 创意设计师' },
   'about.servicesLabel': { en: 'Services', zh: '服务方向' },
@@ -64,7 +64,7 @@ export const translations = {
   'projects.desc': { en: 'Building impactful digital solutions from concept to deployment.', zh: '从概念到部署，构建有影响力的数字解决方案。' },
   'projects.mox.desc': { en: 'MiMo AI Desktop Client - Interacting with Xiaomi MiMo models through official OpenAI-compatible API', zh: '小米MiMo AI桌面客户端 - 通过官方OpenAI兼容API与MiMo模型交互' },
   'projects.danci.desc': { en: 'Personal portfolio website built with React, GSAP and WebGL — featuring dynamic gradient backgrounds, particle effects and high-end creative agency style animations', zh: '个人作品集网站，使用 React、GSAP 和 WebGL 构建 — 包含动态渐变背景、粒子效果和高端创意机构风格动画' },
-  'projects.ideabutler.desc': { en: 'Smart inspiration management skill that auto-captures ideas and AI-scores them', zh: '智能灵感管理工具，自动捕获想法并进行AI评分' },
+  'projects.upchis.desc': { en: 'UPCHIS studio official website — a bilingual Astro site with GSAP scroll storytelling for a studio working across film, web & interaction and AI engineering', zh: 'UPCHIS 数字创意工作室官网 — 基于 Astro 构建的双语站点，用 GSAP 滚动叙事呈现影像、网站与交互、AI 开发三类作品' },
   'projects.encryption.desc': { en: 'Multi-algorithm encryption system supporting text and file encryption', zh: '支持文本和文件加密的多算法加密系统' },
   
   'contact.label': { en: 'Get in Touch', zh: '联系我' },

@@ -151,7 +151,7 @@ AYSTBA_PORTFOLIO/
 │   └── images/             # 公共图片
 ├── src/
 │   ├── assets/             # 构建时处理的图片资源
-│   │   ├── A.png           # IdeaButler 截图
+│   │   ├── upchis.png      # UPCHIS 官网截图
 │   │   ├── AYSTBAP.png     # Portfolio 项目截图
 │   │   ├── SKILL.png       # Encryption Suite 截图
 │   │   ├── hero-bg.jpg     # 首屏背景图

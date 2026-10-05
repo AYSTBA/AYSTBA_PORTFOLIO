@@ -5,7 +5,7 @@ import { ArrowUpRight } from 'lucide-react';
 import { useLang } from '../context/LanguageContext';
 import moxImg from '../assets/mox.png';
 import portfolioImg from '../assets/AYSTBAP.png';
-import ideaButlerImg from '../assets/A.png';
+import upchisImg from '../assets/upchis.png';
 import encryptionImg from '../assets/SKILL.png';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -13,7 +13,7 @@ gsap.registerPlugin(ScrollTrigger);
 const projects = [
   { tag: 'Rust + Vue', title: 'moX', descKey: 'projects.mox.desc', color: '#2a1a2a', url: 'https://github.com/AYSTBA/moX', img: moxImg },
   { tag: 'React + GSAP + WebGL', title: 'AYSTBA_PORTFOLIO', descKey: 'projects.danci.desc', color: '#1a2a2a', url: 'https://github.com/AYSTBA/AYSTBA_PORTFOLIO', img: portfolioImg },
-  { tag: 'Python + AI', title: 'IdeaButler', descKey: 'projects.ideabutler.desc', color: '#2a2a1a', url: 'https://github.com/AYSTBA/IdeaButler-AiSkill', img: ideaButlerImg },
+  { tag: 'Astro + GSAP', title: 'UPCHIS', descKey: 'projects.upchis.desc', color: '#26221a', url: 'https://upchis.work/', img: upchisImg },
   { tag: 'Python + Security', title: 'Encryption Suite', descKey: 'projects.encryption.desc', color: '#1a1a2a', url: 'https://github.com/AYSTBA/Multi-AlgorithmEncryptioSoftware', img: encryptionImg },
 ];
 

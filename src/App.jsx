@@ -31,21 +31,25 @@ export default function App() {
   return (
     <div ref={appRef}>
       <div className="grainient-bg-wrapper">
+        {/* 精选作品及以下区块透出的动态渐变背景。
+            注意：Hero 是不透明的（.hero 有底色 + z-index:10），首屏不会显示这层背景。
+            想调节动效强弱就改下面这组参数：timeSpeed/warpSpeed 控速度，
+            warpStrength/warpAmplitude 控形变幅度，color2 控底色亮度，contrast 控明暗对比。 */}
         <Grainient
           className="grainient-bg"
           color1="#78cb6e"
-          color2="#000000"
+          color2="#0d1a0c"
           color3="#664b7e"
-          timeSpeed={0.15}
-          warpStrength={1.2}
-          warpFrequency={3.0}
-          warpSpeed={1.5}
-          warpAmplitude={40.0}
-          rotationAmount={300.0}
-          noiseScale={1.5}
+          timeSpeed={0.5}
+          warpStrength={1.6}
+          warpFrequency={3.6}
+          warpSpeed={3.0}
+          warpAmplitude={38.0}
+          rotationAmount={500.0}
+          noiseScale={2.2}
           grainAmount={0.08}
-          contrast={1.3}
-          saturation={0.9}
+          contrast={1.15}
+          saturation={1.05}
           zoom={1.0}
         />
       </div>

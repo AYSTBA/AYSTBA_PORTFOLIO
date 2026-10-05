@@ -115,7 +115,6 @@ export default function Hero({ openingComplete }) {
 
       var cw = containerRef.current?.offsetWidth || window.innerWidth;
       if (cw === 0) { raf = requestAnimationFrame(tick); return; }
-      var cx = cw / 2;
 
       var items = itemsRef.current;
       for (var i = 0; i < items.length; i++) {
@@ -126,11 +125,12 @@ export default function Hero({ openingComplete }) {
         var cardCx = left + CARD_W / 2;
         var nx = 2 * cardCx / cw - 1;
 
+        // 越靠中间越大，向两侧缩小并轻微倾斜（移动端不倾斜）
         var scale = 1 - Math.abs(nx) * 0.05;
-        var rot = nx * 1.8;
+        var rot = nx * (cw < 768 ? 0 : 1.8);
 
-  var rot = nx * (cw < 768 ? 0 : 1.8);
         el.style.transition = "none";
+        el.style.transform = "scale(" + scale + ") rotate(" + rot + "deg)";
       }
 
       if (trackRef.current) {

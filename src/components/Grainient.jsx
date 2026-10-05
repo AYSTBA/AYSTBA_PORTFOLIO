@@ -128,12 +128,8 @@ const Grainient = ({
   quality = 'medium'
 }) => {
   const containerRef = useRef(null);
-  const hasInitializedRef = useRef(false);
 
   useEffect(() => {
-    if (hasInitializedRef.current) return;
-    hasInitializedRef.current = true;
-
     const container = containerRef.current;
     if (!container) return;
 

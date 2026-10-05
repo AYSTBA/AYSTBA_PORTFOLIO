@@ -61,8 +61,17 @@ const BorderGlow = ({
   animated = false,
   colors = ['#c084fc', '#f472b6', '#38bdf8'],
   fillOpacity = 0.5,
+  ref,
 }) => {
   const cardRef = useRef(null);
+
+  // React 19 会把 ref 当作普通 prop 传给函数组件，必须显式接收并转发，
+  // 否则外层传进来的 ref 永远是 null（About 的头像卡入场动画就是这么失效的）。
+  const setCardRef = useCallback((node) => {
+    cardRef.current = node;
+    if (typeof ref === 'function') ref(node);
+    else if (ref) ref.current = node;
+  }, [ref]);
 
   const getCenterOfElement = useCallback((el) => {
     const { width, height } = el.getBoundingClientRect();
@@ -131,7 +140,7 @@ const BorderGlow = ({
 
   return (
     <div
-      ref={cardRef}
+      ref={setCardRef}
       onPointerMove={handlePointerMove}
       className={`border-glow-card ${className}`}
       style={{

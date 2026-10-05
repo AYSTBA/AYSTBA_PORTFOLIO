@@ -32,12 +32,8 @@ const DotField = memo(({
   propsRef.current = { dotRadius, dotSpacing, cursorRadius, cursorForce, bulgeOnly, bulgeStrength, sparkle, waveAmplitude, gradientFrom, gradientTo };
   const rebuildRef = useRef(null);
   const glowIdRef = useRef(`dot-field-glow-${Math.random().toString(36).slice(2, 9)}`);
-  const hasInitializedRef = useRef(false);
 
   useEffect(() => {
-    if (hasInitializedRef.current) return;
-    hasInitializedRef.current = true;
-
     const canvas = canvasRef.current;
     const glowEl = glowRef.current;
     if (!canvas) return;
