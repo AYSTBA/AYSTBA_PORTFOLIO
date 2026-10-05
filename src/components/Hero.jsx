@@ -1,19 +1,12 @@
-﻿import { useEffect, useRef, useMemo, useState } from "react";
+import { useEffect, useRef, useMemo, useState } from "react";
 import { gsap } from "gsap";
 import DotField from "./DotField";
 import heroBg from "../assets/hero-bg.jpg";
+import heroWorks from "../data/heroWorks.json";
 import { useLang } from "../context/LanguageContext";
 
-var carouselItems = [
-  { color: "#2a3a2a", label: "Photography", img: "https://picsum.photos/seed/photography/400/500" },
-  { color: "#3a3a2a", label: "3D Render", img: "https://picsum.photos/seed/3drender/400/500" },
-  { color: "#2a2a3a", label: "Brand Identity", img: "https://picsum.photos/seed/brand/400/500" },
-  { color: "#3a3a2a", label: "AI Art", img: "https://picsum.photos/seed/aiart/400/500" },
-  { color: "#2a3a3a", label: "UI Design", img: "https://picsum.photos/seed/uidesign/400/500" },
-  { color: "#3a2a3a", label: "Game Art", img: "https://picsum.photos/seed/gameart/400/500" },
-  { color: "#2a3a2a", label: "Poster", img: "https://picsum.photos/seed/poster/400/500" },
-  { color: "#2a3a3a", label: "Illustration", img: "https://picsum.photos/seed/illustration/400/500" },
-];
+// 卡片图片全部指向 public/works/ 下的真实文件，配置见 src/data/heroWorks.json
+var carouselItems = heroWorks.items;
 
 var CARD_W = 180;
 var CARD_GAP = 52;
@@ -43,6 +36,17 @@ export default function Hero({ openingComplete }) {
   var [selectedItem, setSelectedItem] = useState(null);
   var [showModal, setShowModal] = useState(false);
   var [isAnimating, setIsAnimating] = useState(false);
+  // 记录加载失败的真实文件地址，用于显示占位卡片而不是破图
+  var [failedImages, setFailedImages] = useState({});
+
+  var markImageFailed = function(src) {
+    setFailedImages(function(prev) {
+      if (prev[src]) return prev;
+      var next = Object.assign({}, prev);
+      next[src] = true;
+      return next;
+    });
+  };
 
   var startRectRef = useRef(null);
   var startTransformRef = useRef({ scale: 1, rotate: 0 });
@@ -376,7 +380,16 @@ export default function Hero({ openingComplete }) {
                 className="hero-carousel-item" 
                 ref={function(el) { setItemRef(el, i); }}
               >
-                <img src={item.img} alt={item.label} className="hero-carousel-image" />
+                {failedImages[item.img] ? (
+                  <div className="hero-carousel-placeholder">{t("hero.imagePending")}</div>
+                ) : (
+                  <img
+                    src={item.img}
+                    alt={item.label}
+                    className="hero-carousel-image"
+                    onError={function() { markImageFailed(item.img); }}
+                  />
+                )}
                 <div className="hero-carousel-label">{item.label}</div>
               </div>
             );
@@ -396,7 +409,16 @@ export default function Hero({ openingComplete }) {
             className="hero-card-modal-content"
             onClick={function(e) { e.stopPropagation(); }}
           >
-            <img src={selectedItem.img} alt={selectedItem.label} className="hero-card-modal-image" />
+            {failedImages[selectedItem.img] ? (
+              <div className="hero-card-modal-placeholder">{t("hero.imagePending")}</div>
+            ) : (
+              <img
+                src={selectedItem.img}
+                alt={selectedItem.label}
+                className="hero-card-modal-image"
+                onError={function() { markImageFailed(selectedItem.img); }}
+              />
+            )}
             <div className="hero-card-modal-label">{selectedItem.label}</div>
             <button className="hero-card-modal-close" onClick={handleClose}>✕</button>
           </div>

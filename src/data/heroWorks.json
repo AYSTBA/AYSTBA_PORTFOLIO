@@ -1,0 +1,13 @@
+{
+  "note": "英雄页轮播卡片配置。img 为真实文件地址（站点根路径，对应 public/works/ 目录）。要换图只需把文件放进 public/works/ 并保持文件名一致，或直接修改下面每一项的 img / label。文件不存在时卡片会显示占位样式，不会出现破图图标。",
+  "items": [
+    { "img": "/works/mox.png", "label": "moX" },
+    { "img": "/works/photography.jpg", "label": "Photography" },
+    { "img": "/works/aystba-portfolio.png", "label": "AYSTBA Portfolio" },
+    { "img": "/works/3d-render.jpg", "label": "3D Render" },
+    { "img": "/works/ideabutler.png", "label": "IdeaButler" },
+    { "img": "/works/brand-identity.jpg", "label": "Brand Identity" },
+    { "img": "/works/encryption-suite.png", "label": "Encryption Suite" },
+    { "img": "/works/ai-art.jpg", "label": "AI Art" }
+  ]
+}

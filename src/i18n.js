@@ -7,6 +7,7 @@ export const translations = {
   'hero.desc': { en: 'Creative Developer & Designer', zh: '创意开发者与设计师' },
   'hero.title1': { en: 'AYSTBA', zh: 'AYSTBA' },
   'hero.title2': { en: 'PORTFOLIO', zh: '作品集' },
+  'hero.imagePending': { en: 'Image pending', zh: '图片待补充' },
   
   'about.label': { en: 'About Me', zh: '关于我' },
   'about.resumeTitle': { en: 'Resume', zh: '个人经历' },
