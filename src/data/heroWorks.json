@@ -1,13 +1,13 @@
 {
-  "note": "英雄页轮播卡片配置。img 为真实文件地址（站点根路径，对应 public/works/ 目录）。要换图只需把文件放进 public/works/ 并保持文件名一致，或直接修改下面每一项的 img / label。文件不存在时卡片会显示占位样式，不会出现破图图标。",
+  "note": "英雄页轮播卡片配置：8 个卡位原样保留，img 留空（卡片显示虚线待填占位，不出现破图）。填内容时把图放进 public/works/，再把对应的 img 改成 '/works/文件名' 即可；label 是卡片底部那行字。",
   "items": [
-    { "img": "/works/mox.png", "label": "moX" },
-    { "img": "/works/photography.jpg", "label": "Photography" },
-    { "img": "/works/aystba-portfolio.png", "label": "AYSTBA Portfolio" },
-    { "img": "/works/3d-render.jpg", "label": "3D Render" },
-    { "img": "/works/upchis.png", "label": "UPCHIS" },
-    { "img": "/works/brand-identity.jpg", "label": "Brand Identity" },
-    { "img": "/works/encryption-suite.png", "label": "Encryption Suite" },
-    { "img": "/works/ai-art.jpg", "label": "AI Art" }
+    { "img": "", "label": "moX" },
+    { "img": "", "label": "Photography" },
+    { "img": "", "label": "AYSTBA Portfolio" },
+    { "img": "", "label": "3D Render" },
+    { "img": "", "label": "UPCHIS" },
+    { "img": "", "label": "Brand Identity" },
+    { "img": "", "label": "Encryption Suite" },
+    { "img": "", "label": "AI Art" }
   ]
 }

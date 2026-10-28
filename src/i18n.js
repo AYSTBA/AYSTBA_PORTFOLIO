@@ -4,10 +4,12 @@ export const translations = {
   'nav.skills': { en: 'Skills', zh: '个人优势' },
   'nav.contact': { en: 'Contact', zh: '联系我' },
   
-  'hero.desc': { en: 'Creative Developer & Designer', zh: '创意开发者与设计师' },
-  'hero.title1': { en: 'AYSTBA', zh: 'AYSTBA' },
-  'hero.title2': { en: 'PORTFOLIO', zh: '作品集' },
+  'hero.subtitle': { en: 'SHENZHEN · INDIE DEVELOPER · UPCHIS STUDIO', zh: '深圳 · 独立开发者 · UPCHIS 工作室' },
+  'hero.intro': { en: 'Hi, I’m', zh: 'Hi，我是' },
+  'hero.title': { en: 'AYSTBA', zh: 'AYSTBA' },
+  'hero.desc': { en: 'Between code and pixels, recording the explorations of AYSTBA, an Earthling.', zh: '在代码与像素之间，记录一个地球人 AYSTBA 的探索。' },
   'hero.imagePending': { en: 'Image pending', zh: '图片待补充' },
+  'projects.title': { en: 'My Projects', zh: '我的项目' },
   
   'about.label': { en: 'About Me', zh: '关于我' },
   'about.resumeTitle': { en: 'Resume', zh: '个人经历' },
@@ -60,8 +62,6 @@ export const translations = {
   'skills.creative.title': { en: 'Creative', zh: '创意设计' },
   'skills.creative.desc': { en: 'Combining technology with creativity to build unique digital experiences.', zh: '将技术与创意结合，创造独特的数字体验。' },
   
-  'projects.label': { en: 'Featured Work', zh: '精选作品' },
-  'projects.desc': { en: 'Building impactful digital solutions from concept to deployment.', zh: '从概念到部署，构建有影响力的数字解决方案。' },
   'projects.mox.desc': { en: 'MiMo AI Desktop Client - Interacting with Xiaomi MiMo models through official OpenAI-compatible API', zh: '小米MiMo AI桌面客户端 - 通过官方OpenAI兼容API与MiMo模型交互' },
   'projects.danci.desc': { en: 'Personal portfolio website built with React, GSAP and WebGL — featuring dynamic gradient backgrounds, particle effects and high-end creative agency style animations', zh: '个人作品集网站，使用 React、GSAP 和 WebGL 构建 — 包含动态渐变背景、粒子效果和高端创意机构风格动画' },
   'projects.upchis.desc': { en: 'UPCHIS studio official website — a bilingual Astro site with GSAP scroll storytelling for a studio working across film, web & interaction and AI engineering', zh: 'UPCHIS 数字创意工作室官网 — 基于 Astro 构建的双语站点，用 GSAP 滚动叙事呈现影像、网站与交互、AI 开发三类作品' },

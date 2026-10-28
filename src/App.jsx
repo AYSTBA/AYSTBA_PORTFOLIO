@@ -1,5 +1,5 @@
-﻿import { useEffect, useRef, useState } from "react";
-import NavWrapper from "./components/NavWrapper";
+import { useEffect, useRef, useState } from "react";
+import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
 import About from "./components/About";
 import Projects from "./components/Projects";
@@ -31,7 +31,7 @@ export default function App() {
   return (
     <div ref={appRef}>
       <div className="grainient-bg-wrapper">
-        {/* 精选作品及以下区块透出的动态渐变背景。
+        {/* 作品卡片区及以下区块透出的动态渐变背景。
             注意：Hero 是不透明的（.hero 有底色 + z-index:10），首屏不会显示这层背景。
             想调节动效强弱就改下面这组参数：timeSpeed/warpSpeed 控速度，
             warpStrength/warpAmplitude 控形变幅度，color2 控底色亮度，contrast 控明暗对比。 */}
@@ -53,8 +53,9 @@ export default function App() {
           zoom={1.0}
         />
       </div>
-      <NavWrapper />
+      <Navbar />
       <main>
+        {/* 顺序：英雄页（含图片轮播）→ 介绍我 → 我的项目 → 我的技能 → 联系我 */}
         <Hero openingComplete={openingComplete} />
         <About />
         <Projects />

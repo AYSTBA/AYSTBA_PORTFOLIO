@@ -5,7 +5,8 @@ import heroBg from "../assets/hero-bg.jpg";
 import heroWorks from "../data/heroWorks.json";
 import { useLang } from "../context/LanguageContext";
 
-// 卡片图片全部指向 public/works/ 下的真实文件，配置见 src/data/heroWorks.json
+// 首屏底部图片轮播。8 个卡位保留，图片内容清空（img 为空 → 卡片显示虚线待填占位，
+// 不会出现破图），配置见 src/data/heroWorks.json。
 var carouselItems = heroWorks.items;
 
 var CARD_W = 180;
@@ -13,6 +14,11 @@ var CARD_GAP = 52;
 var CARD_STEP = CARD_W + CARD_GAP;
 var TOTAL_W = carouselItems.length * CARD_STEP;
 
+// 轨道要铺得比屏幕更宽，否则滚到循环点右侧会露出空白。
+// 份数按 TOTAL_W 算，至少 2 份（8 个卡位时即 16 张）。
+var COPIES = Math.max(2, Math.ceil(2600 / TOTAL_W));
+
+// 首屏左上角主按钮：落到下面的项目卡片区
 export default function Hero({ openingComplete }) {
   var { t } = useLang();
   var trackRef = useRef(null);
@@ -39,8 +45,13 @@ export default function Hero({ openingComplete }) {
   // 记录加载失败的真实文件地址，用于显示占位卡片而不是破图
   var [failedImages, setFailedImages] = useState({});
 
-  var markImageFailed = function(src) {
-    setFailedImages(function(prev) {
+  // 卡位是否还没有内容：img 留空，或者文件加载失败
+  var isSlotEmpty = function (item) {
+    return !item.img || !!failedImages[item.img];
+  };
+
+  var markImageFailed = function (src) {
+    setFailedImages(function (prev) {
       if (prev[src]) return prev;
       var next = Object.assign({}, prev);
       next[src] = true;
@@ -51,60 +62,58 @@ export default function Hero({ openingComplete }) {
   var startRectRef = useRef(null);
   var startTransformRef = useRef({ scale: 1, rotate: 0 });
 
-  var doubled = useMemo(function() { return carouselItems.concat(carouselItems); }, []);
+  var looped = useMemo(function () {
+    var out = [];
+    for (var i = 0; i < COPIES; i++) out = out.concat(carouselItems);
+    return out;
+  }, []);
 
-  useEffect(() => {
+  useEffect(function () {
     if (!openingComplete) return;
 
     gsap.set([titleLine1Ref.current, titleLine2Ref.current], {
       opacity: 0,
       x: -100,
-      scaleX: 0.8,
-      skewX: -10
+      skewX: -10,
     });
 
-    const tl = gsap.timeline({
-      defaults: {
-        ease: 'power4.out',
-        duration: 0.8
-      }
+    var tl = gsap.timeline({
+      defaults: { ease: "power4.out", duration: 0.8 },
     });
 
-    tl.to(titleLine1Ref.current, {
-      opacity: 1,
-      x: 0,
-      scaleX: 1,
-      skewX: 0,
-      duration: 1
-    })
-    .to(titleLine2Ref.current, {
-      opacity: 1,
-      x: 0,
-      scaleX: 1,
-      skewX: 0,
-      duration: 1
-    }, 0.2);
+    tl.to(titleLine1Ref.current, { opacity: 1, x: 0, skewX: 0, duration: 1 }).to(
+      titleLine2Ref.current,
+      { opacity: 1, x: 0, skewX: 0, duration: 1 },
+      0.2
+    );
 
+    return function () {
+      tl.kill();
+    };
   }, [openingComplete]);
 
-  useEffect(function() {
+  // 轮播主循环：正弦变速的自动滑动 + 拖拽惯性 + 中间大两侧小的透视
+  useEffect(function () {
     var prev = 0;
     var raf;
+    var reduceMotion =
+      typeof window.matchMedia === "function" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-    var tick = function(now) {
+    var tick = function (now) {
       if (!prev) prev = now;
       var dt = Math.min((now - prev) / 1000, 0.1);
       prev = now;
 
-      var speed = 25 + 18 * Math.sin(now * 0.00035 + 1.2);
+      var speed = reduceMotion ? 0 : 25 + 18 * Math.sin(now * 0.00035 + 1.2);
       var phase = phaseRef.current;
 
       if (phase === 2) {
         var absV = Math.abs(momentumVel.current);
-        var friction = absV > 250 ? 0.86 : (absV > 80 ? 0.93 : 0.97);
+        var friction = absV > 250 ? 0.86 : absV > 80 ? 0.93 : 0.97;
         momentumVel.current *= friction;
         dragOffsetRef.current += momentumVel.current * dt;
-        if (absV < 6) { phaseRef.current = 0; }
+        if (absV < 6) phaseRef.current = 0;
       } else if (phase === 0) {
         autoOffsetRef.current += speed * dt;
         if (autoOffsetRef.current >= TOTAL_W) autoOffsetRef.current -= TOTAL_W;
@@ -113,8 +122,11 @@ export default function Hero({ openingComplete }) {
       var raw = autoOffsetRef.current + dragOffsetRef.current;
       var offset = ((raw % TOTAL_W) + TOTAL_W) % TOTAL_W;
 
-      var cw = containerRef.current?.offsetWidth || window.innerWidth;
-      if (cw === 0) { raf = requestAnimationFrame(tick); return; }
+      var cw = (containerRef.current && containerRef.current.offsetWidth) || window.innerWidth;
+      if (cw === 0) {
+        raf = requestAnimationFrame(tick);
+        return;
+      }
 
       var items = itemsRef.current;
       for (var i = 0; i < items.length; i++) {
@@ -123,7 +135,7 @@ export default function Hero({ openingComplete }) {
 
         var left = i * CARD_STEP - offset;
         var cardCx = left + CARD_W / 2;
-        var nx = 2 * cardCx / cw - 1;
+        var nx = (2 * cardCx) / cw - 1;
 
         // 越靠中间越大，向两侧缩小并轻微倾斜（移动端不倾斜）
         var scale = 1 - Math.abs(nx) * 0.05;
@@ -134,21 +146,77 @@ export default function Hero({ openingComplete }) {
       }
 
       if (trackRef.current) {
-        trackRef.current.style.transform = "translateX(" + (-offset) + "px)";
+        trackRef.current.style.transform = "translateX(" + -offset + "px)";
       }
 
       raf = requestAnimationFrame(tick);
     };
 
     raf = requestAnimationFrame(tick);
-    return function() { cancelAnimationFrame(raf); };
+    return function () {
+      cancelAnimationFrame(raf);
+    };
   }, []);
 
-  var setItemRef = useMemo(function() {
-    return function(el, i) { itemsRef.current[i] = el; };
+  var setItemRef = useMemo(function () {
+    return function (el, i) {
+      itemsRef.current[i] = el;
+    };
   }, []);
 
-  var animateOpen = function() {
+  // 拖拽 / 点击：位移小于 10px 视为点击，走放大成弹窗的 FLIP 动画
+  useEffect(function () {
+    var el = containerRef.current;
+    if (!el) return;
+
+    var onDown = function (e) {
+      phaseRef.current = 1;
+      dragStartX.current = e.clientX;
+      dragStartOffset.current = dragOffsetRef.current;
+      lastDragX.current = e.clientX;
+      lastDragT.current = performance.now();
+    };
+
+    var onMove = function (e) {
+      if (phaseRef.current !== 1) return;
+      dragOffsetRef.current = dragStartOffset.current - (e.clientX - dragStartX.current);
+      var now = performance.now();
+      var dt = now - lastDragT.current;
+      if (dt > 0) {
+        momentumVel.current = ((e.clientX - lastDragX.current) / dt) * 16;
+      }
+      lastDragX.current = e.clientX;
+      lastDragT.current = now;
+    };
+
+    var onUp = function (e) {
+      phaseRef.current = 2;
+      var dragDistance = Math.abs(e.clientX - dragStartX.current);
+      if (dragDistance < 10) {
+        var target = e.target.closest(".hero-carousel-item");
+        if (target && target.parentElement) {
+          var index = Array.prototype.indexOf.call(target.parentElement.children, target);
+          var item = looped[index];
+          if (item) handleCardClick(item, index);
+        }
+      }
+    };
+
+    el.addEventListener("pointerdown", onDown);
+    el.addEventListener("pointermove", onMove);
+    el.addEventListener("pointerup", onUp);
+    el.addEventListener("pointercancel", onUp);
+
+    return function () {
+      el.removeEventListener("pointerdown", onDown);
+      el.removeEventListener("pointermove", onMove);
+      el.removeEventListener("pointerup", onUp);
+      el.removeEventListener("pointercancel", onUp);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  var animateOpen = function () {
     if (!modalContentRef.current || !startRectRef.current) return;
 
     var rect = startRectRef.current;
@@ -165,47 +233,41 @@ export default function Hero({ openingComplete }) {
       height: rect.height,
       scale: transform.scale,
       rotate: transform.rotate,
-      borderRadius: 12,
+      borderRadius: 16,
       opacity: 1,
       x: 0,
-      y: 0
+      y: 0,
     });
 
-    gsap.to(modalRef.current, {
-      opacity: 1,
-      duration: 0.4,
-      ease: 'power2.out'
-    });
+    gsap.to(modalRef.current, { opacity: 1, duration: 0.4, ease: "power2.out" });
 
-    var tl = gsap.timeline({
-      defaults: {
-        ease: 'power4.out'
-      },
-      onComplete: function() {
-        setIsAnimating(false);
-      }
-    });
-
-    tl.to(modalContentRef.current, {
-      duration: 0.7,
-      left: targetX,
-      top: targetY - 60,
-      width: targetW,
-      height: targetH,
-      scale: 1.15,
-      rotate: 0,
-      borderRadius: 28
-    })
-    .to(modalContentRef.current, {
-      duration: 0.4,
-      top: targetY,
-      scale: 1,
-      borderRadius: 24,
-      ease: 'power2.out'
-    });
+    gsap
+      .timeline({
+        defaults: { ease: "power4.out" },
+        onComplete: function () {
+          setIsAnimating(false);
+        },
+      })
+      .to(modalContentRef.current, {
+        duration: 0.7,
+        left: targetX,
+        top: targetY - 60,
+        width: targetW,
+        height: targetH,
+        scale: 1.15,
+        rotate: 0,
+        borderRadius: 28,
+      })
+      .to(modalContentRef.current, {
+        duration: 0.4,
+        top: targetY,
+        scale: 1,
+        borderRadius: 24,
+        ease: "power2.out",
+      });
   };
 
-  var animateClose = function() {
+  var animateClose = function () {
     if (!modalContentRef.current || !startRectRef.current) {
       setShowModal(false);
       setSelectedItem(null);
@@ -216,54 +278,44 @@ export default function Hero({ openingComplete }) {
     var rect = startRectRef.current;
     var transform = startTransformRef.current;
 
-    gsap.to(modalRef.current, {
-      opacity: 0,
-      duration: 0.35,
-      ease: 'power2.in'
-    });
+    gsap.to(modalRef.current, { opacity: 0, duration: 0.35, ease: "power2.in" });
 
-    var tl = gsap.timeline({
-      defaults: {
-        ease: 'power4.inOut'
-      },
-      onComplete: function() {
-        setShowModal(false);
-        setSelectedItem(null);
-        setIsAnimating(false);
-      }
-    });
-
-    tl.to(modalContentRef.current, {
-      duration: 0.15,
-      top: '+=30',
-      scale: 0.95,
-      ease: 'power2.in'
-    })
-    .to(modalContentRef.current, {
-      duration: 0.5,
-      left: rect.left,
-      top: rect.top,
-      width: rect.width,
-      height: rect.height,
-      scale: transform.scale,
-      rotate: transform.rotate,
-      borderRadius: 12
-    });
+    gsap
+      .timeline({
+        defaults: { ease: "power4.inOut" },
+        onComplete: function () {
+          setShowModal(false);
+          setSelectedItem(null);
+          setIsAnimating(false);
+        },
+      })
+      .to(modalContentRef.current, { duration: 0.15, top: "+=30", scale: 0.95, ease: "power2.in" })
+      .to(modalContentRef.current, {
+        duration: 0.5,
+        left: rect.left,
+        top: rect.top,
+        width: rect.width,
+        height: rect.height,
+        scale: transform.scale,
+        rotate: transform.rotate,
+        borderRadius: 16,
+      });
   };
 
-  var handleCardClick = function(item, index) {
+  var handleCardClick = function (item, index) {
     if (isAnimating || showModal) return;
+    // 空卡位没有内容可放大，点了不弹窗
+    if (isSlotEmpty(item)) return;
 
     var target = itemsRef.current[index];
     if (!target) return;
 
     var rect = target.getBoundingClientRect();
-    var computedStyle = window.getComputedStyle(target);
-    var transform = computedStyle.transform || 'none';
-    
+    var transform = window.getComputedStyle(target).transform || "none";
+
     var scale = 1;
     var rotate = 0;
-    if (transform !== 'none') {
+    if (transform !== "none") {
       var match = transform.match(/matrix\(([^,]+),\s*([^,]+),\s*([^,]+),\s*([^,]+),/);
       if (match) {
         var a = parseFloat(match[1]);
@@ -272,88 +324,40 @@ export default function Hero({ openingComplete }) {
         rotate = Math.atan2(b, a) * (180 / Math.PI);
       }
     }
-    
+
     startRectRef.current = rect;
     startTransformRef.current = { scale: scale, rotate: rotate };
     setSelectedItem(item);
     setShowModal(true);
     setIsAnimating(true);
 
-    requestAnimationFrame(function() {
+    requestAnimationFrame(function () {
       animateOpen();
     });
   };
 
-  var handleClose = function(e) {
+  var handleClose = function (e) {
     if (e) e.stopPropagation();
     if (isAnimating || !showModal) return;
     setIsAnimating(true);
     animateClose();
   };
 
-  useEffect(function() {
-    var el = containerRef.current;
-    if (!el) return;
-
-    var onDown = function(e) {
-      phaseRef.current = 1;
-      dragStartX.current = e.clientX;
-      dragStartOffset.current = dragOffsetRef.current;
-      lastDragX.current = e.clientX;
-      lastDragT.current = performance.now();
-    };
-
-    var onMove = function(e) {
-      if (phaseRef.current !== 1) return;
-      dragOffsetRef.current = dragStartOffset.current - (e.clientX - dragStartX.current);
-      var now = performance.now();
-      var dt = now - lastDragT.current;
-      if (dt > 0) {
-        momentumVel.current = (e.clientX - lastDragX.current) / dt * 16;
-      }
-      lastDragX.current = e.clientX;
-      lastDragT.current = now;
-    };
-
-    var onUp = function(e) {
-      phaseRef.current = 2;
-      var dragDistance = Math.abs(e.clientX - dragStartX.current);
-      if (dragDistance < 10) {
-        var target = e.target.closest('.hero-carousel-item');
-        if (target) {
-          var index = Array.from(target.parentElement.children).indexOf(target);
-          var item = doubled[index];
-          if (item) {
-            handleCardClick(item, index);
-          }
-        }
-      }
-    };
-
-    el.addEventListener("pointerdown", onDown);
-    el.addEventListener("pointermove", onMove);
-    el.addEventListener("pointerup", onUp);
-    el.addEventListener("pointercancel", onUp);
-
-    return function() {
-      el.removeEventListener("pointerdown", onDown);
-      el.removeEventListener("pointermove", onMove);
-      el.removeEventListener("pointerup", onUp);
-      el.removeEventListener("pointercancel", onUp);
-    };
-  }, []);
-
   return (
     <section id="hero" className="hero">
-      <div className="hero-bg-image">
-        <img src={heroBg} alt="" />
+      <div className="hero-visual">
+        <div className="hero-bg-image">
+          <img src={heroBg} alt="" />
+        </div>
+        <div className="hero-bg" />
       </div>
-      <div className="hero-bg" />
       <div className="hero-frost" />
+
+      {/* 鼠标滑动粒子：跟着指针产生形变、聚拢与光晕 */}
       <div className="hero-dotfield">
         <DotField
-          dotRadius={1.5}
-          dotSpacing={21}
+          dotRadius={3}
+          dotSpacing={16}
           cursorRadius={500}
           cursorForce={0.15}
           bulgeStrength={67}
@@ -365,29 +369,47 @@ export default function Hero({ openingComplete }) {
           glowColor="#c8ff00"
         />
       </div>
+
       <div className="hero-content">
+        <p className="hero-watermark">{t("hero.subtitle")}</p>
         <h1 className="hero-title">
-          <span className="hero-title-line accent" ref={titleLine1Ref}>{t("hero.title1")}</span>
-          <span className="hero-title-line outline" ref={titleLine2Ref}>{t("hero.title2")}</span>
+          <span className="hero-title-intro" ref={titleLine1Ref}>
+            {t("hero.intro")}
+          </span>
+          <span className="hero-title-name" ref={titleLine2Ref}>
+            {t("hero.title")}
+          </span>
         </h1>
+        <p className="hero-desc">{t("hero.desc")}</p>
+        <div className="hero-actions">
+          <a className="hero-btn hero-btn-primary" href="#projects">
+            {t("nav.projects")}
+          </a>
+        </div>
       </div>
+
+      {/* 图片轮播：自动横向流动，可拖拽，点卡片放大成弹窗 */}
       <div className="hero-carousel" ref={containerRef}>
         <div className="hero-carousel-track" ref={trackRef}>
-          {doubled.map(function(item, i) {
+          {looped.map(function (item, i) {
             return (
-              <div 
-                key={i} 
-                className="hero-carousel-item" 
-                ref={function(el) { setItemRef(el, i); }}
+              <div
+                key={i}
+                className={"hero-carousel-item" + (isSlotEmpty(item) ? " hero-carousel-item--empty" : "")}
+                ref={function (el) {
+                  setItemRef(el, i);
+                }}
               >
-                {failedImages[item.img] ? (
+                {isSlotEmpty(item) ? (
                   <div className="hero-carousel-placeholder">{t("hero.imagePending")}</div>
                 ) : (
                   <img
                     src={item.img}
                     alt={item.label}
                     className="hero-carousel-image"
-                    onError={function() { markImageFailed(item.img); }}
+                    onError={function () {
+                      markImageFailed(item.img);
+                    }}
                   />
                 )}
                 <div className="hero-carousel-label">{item.label}</div>
@@ -398,29 +420,35 @@ export default function Hero({ openingComplete }) {
       </div>
 
       {showModal && selectedItem && (
-        <div 
-          ref={modalRef} 
-          className="hero-card-modal" 
+        <div
+          ref={modalRef}
+          className="hero-card-modal"
           style={{ opacity: 0 }}
           onClick={handleClose}
         >
-          <div 
-            ref={modalContentRef} 
+          <div
+            ref={modalContentRef}
             className="hero-card-modal-content"
-            onClick={function(e) { e.stopPropagation(); }}
+            onClick={function (e) {
+              e.stopPropagation();
+            }}
           >
-            {failedImages[selectedItem.img] ? (
+            {isSlotEmpty(selectedItem) ? (
               <div className="hero-card-modal-placeholder">{t("hero.imagePending")}</div>
             ) : (
               <img
                 src={selectedItem.img}
                 alt={selectedItem.label}
                 className="hero-card-modal-image"
-                onError={function() { markImageFailed(selectedItem.img); }}
+                onError={function () {
+                  markImageFailed(selectedItem.img);
+                }}
               />
             )}
             <div className="hero-card-modal-label">{selectedItem.label}</div>
-            <button className="hero-card-modal-close" onClick={handleClose}>✕</button>
+            <button className="hero-card-modal-close" onClick={handleClose} aria-label="Close">
+              ✕
+            </button>
           </div>
         </div>
       )}

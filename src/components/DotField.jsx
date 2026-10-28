@@ -5,8 +5,8 @@ import './DotField.css';
 const TWO_PI = Math.PI * 2;
 
 const DotField = memo(({
-  dotRadius = 1.5,
-  dotSpacing = 14,
+  dotRadius = 4,
+  dotSpacing = 18,
   cursorRadius = 500,
   cursorForce = 0.1,
   bulgeOnly = true,
@@ -79,7 +79,9 @@ const DotField = memo(({
 
     function buildDots(w, h) {
       const p = propsRef.current;
-      const step = p.dotRadius + p.dotSpacing;
+      // dotRadius 是圆点的真实绘制半径，dotSpacing 是点与点之间的净间隙。
+      // 两者分开，放大圆点就不会连带把网格撑开。
+      const step = p.dotRadius * 2 + p.dotSpacing;
       const cols = Math.floor(w / step);
       const rows = Math.floor(h / step);
       const padX = (w % step) / 2;
@@ -149,7 +151,7 @@ const DotField = memo(({
 
       const cr = p.cursorRadius;
       const crSq = cr * cr;
-      const rad = p.dotRadius / 2;
+      const rad = p.dotRadius;
       const isBulge = p.bulgeOnly;
 
       ctx.beginPath();

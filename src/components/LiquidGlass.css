@@ -1,0 +1,105 @@
+/* ===== LIQUID GLASS =====
+   折射层（backdrop-filter: url(#filter)）负责把背景在边缘折弯，
+   sheen 负责方向性高光，rim 只负责"玻璃有多厚"，tint 负责染色。
+   详细原理见 LiquidGlass.jsx。 */
+.liquid-glass {
+  position: relative;
+  isolation: isolate;
+  border-radius: var(--lg-radius, 28px);
+  --lg-spec-px: 0.5;
+}
+
+.liquid-glass__defs {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+/* 透镜：整块玻璃的 backdrop-filter（边缘位移折射 + 轻微模糊 + 饱和）。
+   不加 overflow: hidden —— 它会把滤镜在圆角边界上裁断，留下一圈没被处理的细带。 */
+.liquid-glass__lens {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* 镜面高光。
+   之前用 inset 0 1px 0 画整条顶边，那是"一条死线"，不是反射 —— 真实的高光
+   有方向、有衰减，只在一侧最亮。这里改成跟着指针横向移动的径向光：
+   横向位置由 --lg-spec-px 控制（0 = 最左，1 = 最右），纵向压在顶部，
+   所以光看起来是"从上方某一侧打过来"，而不是绕一圈。
+   mix-blend-mode: screen 让它只提亮、不压暗。 */
+.liquid-glass__sheen {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  z-index: 1;
+  pointer-events: none;
+  mix-blend-mode: screen;
+  transition: background-position 0.25s ease-out;
+  background:
+    radial-gradient(
+      42% 130% at calc(var(--lg-spec-px) * 100%) -30%,
+      rgb(255 255 255 / 0.4) 0%,
+      rgb(255 255 255 / 0.12) 42%,
+      transparent 72%
+    ),
+    /* 下缘的环形余光：真实玻璃的临界角反射，很淡但能让轮廓"立"起来 */
+    radial-gradient(
+      80% 60% at 50% 118%,
+      rgb(255 255 255 / 0.16) 0%,
+      rgb(255 255 255 / 0.05) 40%,
+      transparent 70%
+    );
+}
+
+/* 厚度与轮廓。
+   这里**一条描边都不画**：inset 0 0 0 Npx 这种东西在胶囊两端的圆弧上就是一条
+   看得见的弧线，叠加起来就是"有好几层、圆角还有线"。玻璃的形状改成靠
+   ① 一圈贴边的极淡外发光（宽 0.5px、模糊 1px，落在玻璃外侧，不像描边）
+   ② 底部受环境光的 1px 反光
+   ③ 柔和的悬浮投影
+   这三样都不画线，但轮廓依然清楚。 */
+.liquid-glass__rim {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  z-index: 2;
+  pointer-events: none;
+  box-shadow:
+    0 0 0 0.5px rgb(255 255 255 / 0.07),
+    inset 0 -1px 0 rgb(255 255 255 / 0.05),
+    0 12px 32px -12px rgb(0 0 0 / 0.34);
+}
+
+/* 染色层：中间保持透明（玻璃要透），只在上下边缘各留一点点，
+   给 50px 高的胶囊一点厚度感，同时让白色文字压在亮色背景上时仍然读得清。
+   整块平铺的 tint 会把玻璃闷成一块灰板，所以用纵向渐变而不是纯色。 */
+.liquid-glass__tint {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  z-index: 2;
+  pointer-events: none;
+  background: var(--lg-tint, rgba(255, 255, 255, 0.03));
+}
+
+.liquid-glass__content {
+  position: relative;
+  z-index: 3;
+}
+/* 系统开启"降低透明度"时退回不透明实心底，保证可读性 */
+@media (prefers-reduced-transparency: reduce) {
+  .liquid-glass__lens {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    background: var(--lg-tint-strong, rgba(10, 13, 11, 0.34));
+  }
+  .liquid-glass__tint {
+    background: transparent;
+  }
+}
